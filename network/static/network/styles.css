@@ -1,0 +1,167 @@
+.all_posts {
+    height: 496px;
+    width: 100vw;
+}
+
+.blur {
+    color: transparent;
+    text-shadow: 0 0 6px #000;
+}
+
+.comment_container {
+    margin-left: 30px;
+    margin-right: 30px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    width: 95%;            
+}
+
+
+.datetime_edited {
+    
+    font-style: italic;
+}
+.edit_post {
+    position:absolute;
+    left: 10%;
+    top: 30%;
+    width: 60%;
+    height: 300px;
+    z-index: 1;
+    border: solid;
+    border-width: thin;
+    background-color:white;
+    border-radius: 5px;
+    padding: 20px;
+}
+
+.follow_quantity {
+    line-height: 130%;
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+    height: 22px;
+    background-color: rgb(129, 191, 193);
+    color: rgb(5, 5, 38);
+}
+
+.invisible{
+    display: none;
+}
+
+.new_post{
+    position:absolute;
+    left: 35%;
+    top: -8%;
+    width: 60%;
+    height: 200px;
+    z-index: 1;
+    border: solid;
+    border-width: thin;
+    background-color:white;
+    border-radius: 5px;
+    padding: 20px;
+}
+.top_button:hover {
+    background-color: blue;
+}
+.overflow {
+    overflow: auto;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.heading{
+    padding-left: 50px;
+    padding-right: 150px;
+}
+.height1 {
+    height: 67px;
+}
+
+.post {
+    border: solid;
+    border-width: thin;
+    margin: 4px;
+    padding-left: 10px;
+    padding-right: 20px;
+    max-height: 130px;
+}
+.right {
+    float: right;
+}
+
+.specific_comment_container{
+    max-height: 130px;
+    border: solid;
+    border-width: thin;
+    border-radius: 5px;
+    margin-bottom: 2px;
+    
+}
+
+
+.textarea {
+    width: 100%;
+    height: 90%;
+}
+
+.thumb:hover { 
+    text-decoration: none; 
+}
+.wrap {
+    overflow-wrap: break-word;
+}
+.underlayer {  
+    width: 95px;
+    border-radius: 5px;
+    margin-top: 1px;
+    display: inline-block;
+    box-sizing: border-box;
+}
+.auth:hover {
+    background-color: rgb(205, 202, 202);
+    border: solid;
+    border-width: thin;
+    box-sizing: border-box;
+}
+
+#general_container {
+    position: absolute;
+}
+#cancel_new_post {
+    border-width: thin;
+    border-radius: 2px;
+}
+
+#new_comment_place {
+
+    height: 130px;
+    border: solid;
+    border-width: thin;
+    border-radius: 5px;
+    padding: 20px;    
+}
+
+#comment_textarea{
+    width: 99%;
+    resize: none;    
+}
+#initial_post_place{
+
+    max-height: 130px;
+    border: solid;
+    border-width: thin;
+    border-radius: 5px;
+    padding: 20px; 
+}
+
+#previous_comments_place {
+    overflow: auto;
+    max-height: 200px;
+    border: solid;
+    border: solid;
+    border-width: thin;
+    border-radius: 5px;
+    padding: 20px; 
+}

@@ -1,0 +1,267 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+<!--  Top row - heading, return button, new-post button, buttons of pagination -->
+
+<div class="row heading"> 
+
+    {% if flag == 'following' %}
+        <div class ='col-8 wrap overflow height1'  id="heading_place">
+            <h3>Posts of users that <strong><i>{{ user.username }}</i></strong> follows</h3>
+        </div>
+        <div class ='col-2'>
+            
+            <span id="return_to_posts_button_place" class="invisible">
+                <button id="return_to_post_button" class="top_button">Return to posts</button>
+            </span>
+            <span  id = "new_post_button_place"></span>
+        </div>
+    {% else %}    
+
+        <div class ='col-8'>
+            <div id="heading_place" class="row">
+                <div class = "col-7 wrap overflow height1">
+                    {% if flag == 'profile' %} 
+                        <h3> Profile of User <strong><i>{{ profile_owner_username }}</i></strong></h3>
+                        email: &nbsp;<strong>{{ profile_owner_email }}</strong>
+                    {% elif flag == 'all_posts' %}
+                        <h3> All Posts  </h3>                       
+                    {% endif %}
+                </div>
+                
+                {% if flag == 'profile' %} 
+                    <div class = 'col-2 right' style="line-height: 180%;">                
+                        Followers &nbsp; <br>
+                        Followed  &nbsp; 
+                    </div>
+                    <div class = 'col-1'  >
+                        <div style="line-height: 180%;">
+                            <div class='follow_quantity'>{{followers}} </div> <br>
+                            <div class='follow_quantity'> {{followed}} </div>                        
+                        </div>
+                    </div>
+                {% else %}
+                    <div class = 'col-3'></div>
+                {% endif %}
+                
+                <div class = 'col-2'>
+                    {% if flag == 'profile' %} 
+                        {% if user.is_authenticated  and  user.username|make_list != profile_owner_username|make_list  %}
+                            <form  action = "{% url 'follow' profile_owner_id  next_page %}" method = 'post' style="display: inline-block;">
+                                {% csrf_token %}
+                                {% if button_follow %}
+                                    <input type="hidden" name = 'action' value ='follow' >
+                                    <input type = 'submit' value = 'Follow' >
+                                {% elif button_unfollow %}
+                                    <input type="hidden" name = 'action' value ='unfollow'>
+                                    <input type = 'submit' value = 'Unfollow'>
+                                {% endif %}
+                            </form>
+                        {%  endif %}
+                    {% endif %} 
+                </div>
+            </div>
+        </div>
+
+
+        <div class ='col-2' >
+            <span id="return_to_posts_button_place" class="invisible">
+                <button id="return_to_post_button" class="top_button">Return to posts</button>
+            </span>
+            
+            <span  id = "new_post_button_place">
+                {% if user.is_authenticated %} 
+                    {% if flag == 'all_posts'  %}
+                        <button id='new_post_button' class="top_button">New Post</button>
+                    {% elif  flag == 'profile' and user.username == profile_owner_username %} 
+                        <button id='new_post_button' class="top_button">New Post</button>
+                    {% endif %}        
+                {% endif %}
+            </span>       
+        </div>
+
+    {% endif %}
+
+
+
+
+    <div class ='col-1' id="pagination_prev_but_place">       
+        <ul class="pagination right">
+            {% if prev_page > 0 %}
+                <li class="page-item">                   
+                    <a class="page-link" id ='prev' href="{% url 'index' prev_page  profile_owner_id  flag %}">Previous</a>                    
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+    <div class ='col-1' id="pagination_next_but_place">
+        <ul class="pagination">
+            {% if next_page <= num_pages  %}
+                <li class="page-item">                    
+                    <a class="page-link" id ='next' href="{% url 'index' next_page  profile_owner_id  flag %}">Next</a>                    
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</div> 
+<hr>
+
+
+<!--   Boxes with specific posts -  all this div with   id = "general_container"  
+ is replaced entirely by comments' page  when any comment link is called  -->
+
+<div id="general_container"  >
+
+
+    <!-- this section appears on new-post button clicking --> 
+
+    <div class ='new_post invisible'>
+        <form action = '{%  url  "new_post"  next_page  profile_owner_id  flag  %}' method = 'post'>
+            {% csrf_token %}
+            {{ form }}
+            <input type="submit">
+            <button id="cancel_new_post" type="button">Cancel</button>
+        </form>            
+    </div>
+
+
+    <!-- Specific posts themselves -->
+
+    <div class="overflow all_posts" >    
+        {% for post in posts %}
+
+            <!-- Edit textarea - mostly invisible - appears only on "Edit" link clicking-->
+            <div class ='edit_post invisible'>
+                <textarea class = 'textarea'  id={{post.3}}>  </textarea>
+                <button class ='edit_button'>Submit</button>
+                <button type="button">Cancel</button>
+            </div>
+
+            
+            <!-- div for every single post section -->
+            <div class ='post  overflow'>
+            
+            
+                <!-- Top row in every post's section  -->
+                <div class="row">
+                    <div class ='col-2 wrap' >
+                        <!-- when flag=all_pages or flag=following -->
+                        {% if flag != 'profile' %}
+                            <!-- this is post's author username -->
+                            <a href = '{%  url   "index"   1  post.0.user.id  "profile" %}'><strong>{{post.0.user}}</strong></a>
+                        {% else %}
+                            <strong>{{post.0.user}}</strong>
+                        {% endif %}
+                    </div>    
+                    
+                    <!-- "Edit"  and   "Comment"   links -->
+                    <div class ='col-2'>  
+                        <a class = 'comment' href="javascript:void(0)" data-id = {{post.3}}>Comment</a>
+                        {% if user.is_authenticated  and user.username|make_list == post.0.user|make_list %}
+                            <a class = 'edit right' href="javascript:void(0)" data-post_id={{post.3}} >Edit</a>
+                        {% endif%}
+                    </div>
+
+                    <div class ='col-8' > 
+
+                        <!-- Thumb up, thumb down section  -->
+                        {% if user.is_authenticated %}
+                            <a class = 'thumb'  href="javascript:void(0)">
+                                <div class = 'underlayer wrap auth'>
+                                    {% if post.2 == 1 %}
+                                        <span class="thumb_up " data-like_status="Cancel_like" data-post_id = {{post.3}} data-like_quantity ={{post.1}}>
+                                            &nbsp 👍🏾 &nbsp {{post.1}} &nbsp 
+                                        </span>
+                                    {% else %}
+                                        <span class="thumb_up " data-like_status="Like" data-post_id = {{post.3}}  data-like_quantity ={{post.1}}>
+                                            &nbsp 👍🏻 &nbsp {{post.1}} &nbsp 
+                                        </span>
+                                    {% endif %}
+                                </div>
+                                <div class = 'underlayer wrap auth'>
+                                    {% if post.5 == 1 %}
+                                        <span class="thumb_down" data-dislike_status="Cancel_dislike" data-post_id = {{post.3}} data-dislike_quantity ={{post.4}}>
+                                            &nbsp 👎🏾 &nbsp {{post.4}} &nbsp 
+                                        </span>
+                                    {% else %}
+                                        <span class="thumb_down" data-dislike_status="Dislike" data-post_id = {{post.3}} data-dislike_quantity ={{post.4}}>
+                                            &nbsp 👎🏻 &nbsp {{post.4}} &nbsp 
+                                        </span>
+                                    {% endif %}
+                                </div>
+                            </a>
+                        {% else %}                                                
+                            <div class = 'underlayer wrap'>
+                                {% if post.1 > 0 %}
+                                    <span> &nbsp 👍🏻 &nbsp {{post.1}} &nbsp </span>
+                                {% endif %} 
+                            </div>     
+                            <div class = 'underlayer wrap'>  
+                                {% if post.4 > 0 %}
+                                    <span > &nbsp 👎🏻 &nbsp {{post.4}} &nbsp </span>
+                                {% endif %}
+                            </div>                                                                 
+                        {% endif %}
+                        
+
+                        <!-- datetime section -->
+                        <span class="right">
+                            
+                            <span class = 'datetime_edited {{post.3}}'>
+                                {% if post.0.datetime_editing %} 
+                                    Edited at {{post.0.datetime_editing}} &nbsp&nbsp&nbsp&nbsp
+                                {% endif %}
+                            </span>
+                            
+                            Posted at {{post.0.datetime_creation}}
+                        </span>                                    
+                    </div>
+                </div>
+
+                <!-- The post content -->
+                <span class="wrap">{{post.0.content}} </span>
+            </div>
+        {% empty %}
+            <h4> No posts yet</h4>
+        {% endfor %}
+    </div>
+</div> 
+
+
+<!-- It is "comments' page"  -  this section replaces  
+    the main template content entirely - when any comment link is clicked -->
+
+<div id ='comments_place' class = 'invisible'>
+
+    {% if user.is_authenticated %}
+        <div id="new_comment_place" class="comment_container">
+            <form onsubmit="return false;">
+                <textarea id = "comment_textarea"  required placeholder="Your comment here - not more then 200 symbols" rows="2" maxlength="200"></textarea>
+                <button  id="new_comment_button" class="top_button">Submit</button> 
+            </form>  
+        </div> 
+    {% endif %}
+    <div id = 'initial_post_place' class="comment_container overflow wrap"></div>
+    <div class="comment_container row" >
+        <div class="col-1"></div>
+        <div class ='col-11' id = 'previous_comments_place' ></div>
+    </div>  
+
+</div>
+
+<script src="{% static 'network/like.js' %}"></script>
+<script src="{% static 'network/edit.js' %}"></script>
+<script type ='module' src="{% static 'network/comments.js' %}"></script>
+{% if user.is_authenticated %}
+
+    {% if flag == 'all_posts' %}
+        <script src="{% static 'network/new_post.js' %}"></script> 
+    {% elif  flag == 'profile' and user.username == profile_owner_username %}  
+        <script src="{% static 'network/new_post.js' %}"></script> 
+    {% endif %}
+    <script type ='module' src="{% static 'network/new_comment.js' %}" ></script> 
+
+{% endif %}
+{% endblock %}
