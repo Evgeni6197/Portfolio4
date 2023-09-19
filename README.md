@@ -1,6 +1,6 @@
 # Social Network
 
- ### 1.  [Video Demonstration ](https://youtu.be/9lLTQqQ-Re4)
+ ### 1.  [Video Demonstration 45sec ](https://youtu.be/loSiFeFDmtA)
 
  ### 2. Launching
 
